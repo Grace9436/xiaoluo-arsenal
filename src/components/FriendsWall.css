@@ -1,0 +1,510 @@
+.friends-wall {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(112, 188, 255, 0.26), transparent 24%),
+    radial-gradient(circle at 76% 14%, rgba(251, 211, 115, 0.18), transparent 20%),
+    radial-gradient(circle at 64% 76%, rgba(181, 126, 255, 0.2), transparent 26%),
+    linear-gradient(145deg, #07132e 0%, #092552 38%, #06142c 70%, #020817 100%);
+  color: #f7eedc;
+  font-family: "Times New Roman", "Noto Serif SC", "Songti SC", serif;
+}
+
+.friends-wall button,
+.friends-wall input,
+.friends-wall textarea {
+  font: inherit;
+}
+
+.friends-aurora {
+  position: absolute;
+  inset: -20%;
+  background:
+    conic-gradient(from 40deg at 50% 50%, transparent 0 18%, rgba(79, 184, 255, 0.18) 22%, transparent 34%, rgba(255, 213, 120, 0.12) 45%, transparent 58%, rgba(177, 128, 255, 0.16) 68%, transparent 80%),
+    radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05), transparent 58%);
+  filter: blur(24px);
+  animation: auroraDrift 16s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.friends-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.28;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.42) 1px, transparent 0),
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 34px 34px, 100% 4px;
+  mix-blend-mode: screen;
+}
+
+.friends-particle {
+  position: absolute;
+  z-index: 1;
+  border-radius: 999px;
+  background: rgba(255, 240, 190, 0.9);
+  box-shadow: 0 0 18px rgba(255, 228, 138, 0.8);
+  animation: particleFloat 7s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.back-home-link {
+  position: fixed;
+  top: 30px;
+  left: 34px;
+  z-index: 20;
+  color: rgba(255, 244, 220, 0.86);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-shadow: 0 0 18px rgba(255, 223, 150, 0.28);
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.back-home-link:hover {
+  color: #ffe6a3;
+  transform: translateX(-3px);
+}
+
+.friends-title-block {
+  position: fixed;
+  top: 26px;
+  right: 38px;
+  z-index: 20;
+  text-align: right;
+}
+
+.friends-title-block h1 {
+  margin: 0;
+  color: #f8d37b;
+  font-size: clamp(52px, 8vw, 116px);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 10px rgba(248, 211, 123, 0.36),
+    0 12px 30px rgba(0, 0, 0, 0.42);
+}
+
+.friends-title-block p {
+  margin: 12px 0 0;
+  color: rgba(255, 243, 214, 0.74);
+  font-family: "Space Grotesk", "Arial", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.friends-quote {
+  position: fixed;
+  top: 9vh;
+  left: 50%;
+  z-index: 12;
+  width: min(720px, calc(100vw - 48px));
+  transform: translateX(-50%);
+  text-align: center;
+  text-shadow: 0 0 26px rgba(255, 255, 255, 0.18);
+}
+
+.friends-quote p {
+  margin: 0;
+  color: rgba(255, 245, 228, 0.9);
+  font-size: clamp(17px, 2vw, 28px);
+  line-height: 1.75;
+  letter-spacing: 0.08em;
+}
+
+.friends-quote p:first-child {
+  color: rgba(247, 211, 140, 0.92);
+  font-style: italic;
+}
+
+.friends-contact {
+  position: fixed;
+  left: 34px;
+  bottom: 112px;
+  z-index: 20;
+  color: rgba(244, 232, 210, 0.66);
+  font-family: "Space Grotesk", "Arial", sans-serif;
+}
+
+.friends-contact h2 {
+  margin: 0 0 10px;
+  color: rgba(255, 230, 174, 0.8);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.friends-contact p {
+  margin: 5px 0;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.friends-actions {
+  position: fixed;
+  left: 34px;
+  bottom: 34px;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.friends-actions button,
+.leave-footprint-btn,
+.dialog-actions button {
+  border: 1px solid rgba(255, 235, 188, 0.42);
+  border-radius: 999px;
+  color: #fff7dd;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 14px 36px rgba(0, 0, 0, 0.28),
+    0 0 26px rgba(248, 211, 123, 0.12);
+  backdrop-filter: blur(16px);
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.friends-actions button {
+  padding: 10px 16px;
+  font-family: "Space Grotesk", "Arial", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.friends-actions .ghost-action {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(255, 235, 188, 0.82);
+  padding-inline: 0;
+}
+
+.friends-actions button:hover,
+.leave-footprint-btn:hover,
+.dialog-actions button:hover {
+  border-color: rgba(255, 225, 151, 0.9);
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    0 18px 42px rgba(0, 0, 0, 0.32),
+    0 0 34px rgba(248, 211, 123, 0.24);
+  transform: translateY(-2px);
+}
+
+.footprints-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.empty-footprints {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  z-index: 0;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 242, 218, 0.36);
+  text-align: center;
+  pointer-events: none;
+}
+
+.empty-footprints span {
+  display: block;
+  margin-bottom: 12px;
+  font-size: clamp(28px, 5vw, 64px);
+  font-style: italic;
+  letter-spacing: 0.08em;
+}
+
+.empty-footprints strong {
+  display: block;
+  color: rgba(255, 224, 161, 0.48);
+  font-size: clamp(14px, 2vw, 20px);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+
+.footprint-token {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  min-width: 92px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #fff7df;
+  cursor: grab;
+  transform-origin: center;
+  transition:
+    filter 140ms ease,
+    scale 140ms ease,
+    text-shadow 140ms ease,
+    left 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    top 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  user-select: none;
+  touch-action: none;
+}
+
+.footprint-token:active {
+  cursor: grabbing;
+}
+
+.footprint-token:hover {
+  z-index: 8;
+  filter: brightness(1.08);
+}
+
+.footprint-token.is-impacting {
+  animation: footprintPulse 160ms ease-out;
+}
+
+.footprint-glyph {
+  display: block;
+  color: var(--footprint-color);
+  font-size: 54px;
+  line-height: 1;
+  text-shadow:
+    0 0 12px color-mix(in srgb, var(--footprint-color) 90%, white),
+    0 0 28px var(--footprint-color),
+    0 8px 20px rgba(0, 0, 0, 0.34);
+  filter: saturate(1.2);
+}
+
+.footprint-name {
+  display: block;
+  max-width: 140px;
+  margin-top: 6px;
+  overflow: hidden;
+  color: rgba(255, 248, 228, 0.92);
+  font-family: "Space Grotesk", "Arial", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+}
+
+.footprint-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 14px);
+  width: max-content;
+  max-width: 220px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 233, 180, 0.5);
+  border-radius: 16px;
+  background: rgba(4, 14, 36, 0.86);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34), 0 0 26px color-mix(in srgb, var(--footprint-color) 32%, transparent);
+  color: #fff4cf;
+  font-size: 13px;
+  line-height: 1.55;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 8px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.footprint-token:hover .footprint-tooltip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.leave-footprint-btn {
+  position: fixed;
+  right: 34px;
+  bottom: 34px;
+  z-index: 25;
+  padding: 14px 22px;
+  font-family: "Space Grotesk", "Arial", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.footprint-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(1, 7, 20, 0.48);
+  backdrop-filter: blur(10px);
+}
+
+.footprint-dialog {
+  width: min(460px, 100%);
+  border: 1px solid rgba(255, 229, 170, 0.5);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 217, 133, 0.18), transparent 34%),
+    rgba(5, 18, 44, 0.92);
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(117, 187, 255, 0.14);
+  padding: 28px;
+  color: #fff4d4;
+}
+
+.footprint-dialog h2 {
+  margin: 0 0 22px;
+  color: #f8d37b;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.footprint-dialog label {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.footprint-dialog label span {
+  color: rgba(255, 240, 208, 0.78);
+  font-family: "Space Grotesk", "Arial", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.footprint-dialog input,
+.footprint-dialog textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 232, 184, 0.42);
+  border-radius: 18px;
+  outline: 0;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff9ea;
+  padding: 13px 14px;
+  font-size: 16px;
+  line-height: 1.45;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.footprint-dialog textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.footprint-dialog input:focus,
+.footprint-dialog textarea:focus {
+  border-color: #f8d37b;
+  box-shadow: 0 0 0 3px rgba(248, 211, 123, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.footprint-dialog input::placeholder,
+.footprint-dialog textarea::placeholder {
+  color: rgba(255, 245, 220, 0.38);
+}
+
+.dialog-hint {
+  display: flex;
+  min-height: 22px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+  color: rgba(255, 242, 218, 0.52);
+  font-family: "Space Grotesk", "Arial", sans-serif;
+  font-size: 12px;
+}
+
+.dialog-hint strong {
+  color: #ff9ca9;
+  font-weight: 700;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.dialog-actions button {
+  padding: 10px 18px;
+  font-family: "Space Grotesk", "Arial", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.dialog-actions button:first-child {
+  background: rgba(248, 211, 123, 0.2);
+  color: #ffe3a0;
+}
+
+@keyframes auroraDrift {
+  from {
+    transform: translate3d(-2%, -1%, 0) rotate(-4deg);
+  }
+  to {
+    transform: translate3d(2%, 1%, 0) rotate(5deg);
+  }
+}
+
+@keyframes particleFloat {
+  from {
+    opacity: 0.28;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0.9;
+    transform: translateY(-18px);
+  }
+}
+
+@keyframes footprintPulse {
+  0% {
+    filter: brightness(1.8) saturate(1.4);
+  }
+  100% {
+    filter: brightness(1) saturate(1);
+  }
+}
+
+@media (max-width: 760px) {
+  .friends-title-block {
+    top: 78px;
+    right: 22px;
+  }
+
+  .friends-title-block h1 {
+    font-size: 58px;
+  }
+
+  .friends-quote {
+    top: 22vh;
+  }
+
+  .friends-contact {
+    display: none;
+  }
+
+  .friends-actions {
+    left: 18px;
+    bottom: 18px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .leave-footprint-btn {
+    right: 18px;
+    bottom: 18px;
+    max-width: 168px;
+    padding: 12px 14px;
+  }
+
+  .footprint-glyph {
+    font-size: 46px;
+  }
+}
