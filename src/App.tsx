@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { categories, quickLinks, siteStats, tools } from "./data/catalog";
+import { categories, quickLinks, siteStats } from "./data/catalog";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
@@ -8,6 +8,9 @@ import { FilterSidebar } from "./components/FilterSidebar";
 import { ToolsGrid } from "./components/ToolsGrid";
 import { FriendsWall } from "./components/FriendsWall";
 import { AiChatModal } from "./components/AiChatModal";
+import { AdminPanel } from "./components/admin/AdminPanel";
+import { fetchTools } from "./services/toolsService";
+import type { Category, Tool } from "./types";
 
 const SESSION_KEY = "xiaoluo-arsenal-intro-seen";
 const FOOTPRINTS_KEY = "footprints_data";
@@ -38,16 +41,61 @@ export default function App() {
   const [altTheme, setAltTheme] = useState(false);
   const [footprintCount, setFootprintCount] = useState(() => readFootprintCount());
   const [aiOpen, setAiOpen] = useState(false);
+  const [toolsData, setToolsData] = useState<Tool[]>([]);
+  const [isToolsLoading, setIsToolsLoading] = useState(true);
   const todayParts = useMemo(() => getTodayParts(), []);
   const dynamicStats = useMemo(
     () => ({
       ...siteStats,
       date: todayParts.display,
-      todayAdded: tools.filter((tool) => tool.addedDate === todayParts.data).length,
+      toolCount: toolsData.length,
+      todayAdded: toolsData.filter((tool) => tool.addedDate === todayParts.data).length,
       friendVisits: footprintCount,
     }),
-    [footprintCount, todayParts],
+    [footprintCount, todayParts, toolsData],
   );
+  const dynamicCategories = useMemo<Category[]>(() => {
+    const categoryCounts = new Map<string, number>();
+    const subcategoryCounts = new Map<string, number>();
+
+    for (const tool of toolsData) {
+      categoryCounts.set(tool.category, (categoryCounts.get(tool.category) ?? 0) + 1);
+
+      if (tool.subcategory) {
+        const key = `${tool.category}::${tool.subcategory}`;
+        subcategoryCounts.set(key, (subcategoryCounts.get(key) ?? 0) + 1);
+      }
+    }
+
+    return categories.map((category) => ({
+      ...category,
+      count: categoryCounts.get(category.name) ?? 0,
+      children: category.children?.map((child) => ({
+        ...child,
+        count: subcategoryCounts.get(`${category.name}::${child.name}`) ?? 0,
+      })),
+    }));
+  }, [toolsData]);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const loadTools = async () => {
+      setIsToolsLoading(true);
+      const loadedTools = await fetchTools();
+
+      if (!ignore) {
+        setToolsData(loadedTools);
+        setIsToolsLoading(false);
+      }
+    };
+
+    void loadTools();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   useEffect(() => {
     const syncPath = () => setPath(window.location.pathname);
@@ -74,7 +122,7 @@ export default function App() {
 
   const filteredTools = useMemo(() => {
     const keyword = query.trim().toLowerCase();
-    return tools.filter((tool) => {
+    return toolsData.filter((tool) => {
       const matchesCategory =
         selectedCategory === "全部" ||
         (tool.category === selectedCategory &&
@@ -96,7 +144,7 @@ export default function App() {
         .toLowerCase()
         .includes(keyword);
     });
-  }, [query, selectedCategory, selectedSubcategory]);
+  }, [query, selectedCategory, selectedSubcategory, toolsData]);
 
   const finishIntro = () => {
     sessionStorage.setItem(SESSION_KEY, "1");
@@ -111,6 +159,10 @@ export default function App() {
 
   if (path === "/friends") {
     return <FriendsWall />;
+  }
+
+  if (path === "/admin") {
+    return <AdminPanel />;
   }
 
   return (
@@ -137,19 +189,28 @@ export default function App() {
         />
         <section className="browse-section" aria-label="工具浏览区">
           <FilterSidebar
-            categories={categories}
+            categories={dynamicCategories}
             selectedCategory={selectedCategory}
             selectedSubcategory={selectedSubcategory}
-            total={siteStats.toolCount}
+            total={dynamicStats.toolCount}
             onSelect={selectCategory}
           />
-          <ToolsGrid
-            tools={filteredTools}
-            query={query}
-            selectedCategory={selectedCategory}
-            selectedSubcategory={selectedSubcategory}
-            onQueryChange={setQuery}
-          />
+          {isToolsLoading ? (
+            <section className="tools-panel" id="tools" aria-live="polite">
+              <div className="empty-state">
+                <strong>工具加载中...</strong>
+                <span>正在准备工具库数据。</span>
+              </div>
+            </section>
+          ) : (
+            <ToolsGrid
+              tools={filteredTools}
+              query={query}
+              selectedCategory={selectedCategory}
+              selectedSubcategory={selectedSubcategory}
+              onQueryChange={setQuery}
+            />
+          )}
         </section>
       </main>
       <Footer />
